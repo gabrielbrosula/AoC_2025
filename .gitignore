@@ -1,3 +1,5 @@
 *.beam
 notes.md
 *.png
+
+debug/

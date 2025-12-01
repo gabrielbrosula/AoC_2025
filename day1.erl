@@ -1,11 +1,11 @@
--module('p1').
--export([part_one/0, part_two/0]).
+-module('day1').
+-export([p1/0, p2/0]).
 
 % Solution:
 % Do the additions and subtractions mod 100 according to the list.
 % When the result is zero, increment the counter.
 
-part_one() -> 
+p1() -> 
     FileName = "input/1-1.txt",
     Lines = util:read_file(FileName),
 
@@ -36,7 +36,7 @@ p1_solver(Begin, Count, [Line|T]) ->
 
     p1_solver(Result, NewCount, T).
 
-part_two() ->
+p2() ->
     FileName = "input/1-1.txt",
     Lines = util:read_file(FileName),
     p2_solver(50, 0, Lines).

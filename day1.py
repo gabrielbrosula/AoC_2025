@@ -18,14 +18,8 @@ def main():
         
         begin = result
 
-        # if result == 0:
-        #     count += 1
-
-        if intermediate < 0:
-            count += abs(intermediate // 100) + 1
-        else:
-            count += intermediate // 100
-
+        if result == 0:
+            count += 1
 
 if __name__ == "__main__":
     main()
