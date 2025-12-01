@@ -1,20 +1,20 @@
 -module('p1').
--export([solve/0]).
+-export([part_one/0, part_two/0]).
 
 % Solution:
 % Do the additions and subtractions mod 100 according to the list.
-% When it is zero, increment the counter.
+% When the result is zero, increment the counter.
 
-solve() -> 
+part_one() -> 
     FileName = "input/1-1.txt",
     Lines = util:read_file(FileName),
 
-    solver(50, 0, Lines).
+    p1_solver(50, 0, Lines).
 
-solver(Begin, Count, []) -> 
+p1_solver(Begin, Count, []) -> 
     io:format("Begin: ~p, Count: ~p~n", [Begin, Count]),
     Count;
-solver(Begin, Count, [Line|T]) ->
+p1_solver(Begin, Count, [Line|T]) ->
     % Parse the string
     Dir = string:slice(Line, 0, 1),
     ParsedNum = list_to_integer(string:slice(Line, 1)),
@@ -34,5 +34,39 @@ solver(Begin, Count, [Line|T]) ->
         true -> NewCount = Count
     end,
 
-    solver(Result, NewCount, T).
+    p1_solver(Result, NewCount, T).
+
+part_two() ->
+    FileName = "input/1-1.txt",
+    Lines = util:read_file(FileName),
+    p2_solver(50, 0, Lines).
+
+
+p2_solver(Begin, Count, []) -> 
+    io:format("Begin: ~p, Count: ~p~n", [Begin, Count]),
+    Count;
+p2_solver(Begin, Count, [Line|T]) ->
+    % Parse the string
+    Dir = string:slice(Line, 0, 1),
+    ParsedNum = list_to_integer(string:slice(Line, 1)),
+
+    case Dir of
+        "L" -> Num = -1 * ParsedNum;
+        "R" -> Num = ParsedNum
+    end,
+
+    % Do the calculations
+    Intermediate = Begin + Num,
+    Result = util:mod(Intermediate, 100),
+
+    if 
+        Intermediate < 0, Begin /= 0 -> NewCount = Count + abs(Intermediate div 100) + 1;
+        Intermediate < 0, Begin == 0 -> NewCount = Count + abs(Intermediate div 100);
+        Intermediate > 0 -> NewCount = Count + Intermediate div 100;
+        Intermediate == 0 -> NewCount = Count + 1
+    end,
+    
+    io:format("Begin: ~p, Num: ~p, Intermediate: ~p, Count: ~p, Result: ~p~n", [Begin, Num, Intermediate, NewCount, Result]),
+
+    p2_solver(Result, NewCount, T).
 

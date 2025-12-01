@@ -1,5 +1,5 @@
 def main():
-    filename = "input/1-1.txt"
+    filename = "input/1-1-ex.txt"
     lst = []
 
     with open(filename, "r") as file:
@@ -11,14 +11,20 @@ def main():
     for l in lst:
         dir = -1 if l[0] == "L" else 1
         num = dir * int(l[1::])
-        result = (begin + num) % 100
+        intermediate = begin + num
+        result = intermediate % 100
         
         print(f"Begin: {begin}, Line: \"{l}\", Num: {num}, Result: {result}, Count: {count}")
         
         begin = result
 
-        if result == 0:
-            count += 1
+        # if result == 0:
+        #     count += 1
+
+        if intermediate < 0:
+            count += abs(intermediate // 100) + 1
+        else:
+            count += intermediate // 100
 
 
 if __name__ == "__main__":
