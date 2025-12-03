@@ -15,14 +15,11 @@ def main():
         high = int(rangeNums[1])
         seq = list(range(low, high + 1))
 
-        #print(f"Range: {r}, Seq: {seq}")
-
         for num in seq:
             numStr = str(num)
 
             # Create valid patterns for num
             patterns = create_pattern(numStr)
-            #print(f"Num: {num}, Patterns: {patterns}")
 
             for p in patterns:
                 later = numStr[len(p)::]
@@ -51,8 +48,6 @@ def split_by_n(string, n):
             substrings.append(string[i:i+n])
         else:
             substrings.append(string[i::])
-
-    #print(f"String: {string}, N: {n}, Res: {substrings}")
 
     return substrings
 
