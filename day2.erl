@@ -29,9 +29,6 @@ get_invalid_p1(Range, Acc) ->
     ),
     [ResultFromSeq|Acc].
 
-    %io:format("Invalid Ids in get_invalid_ids fn~n"),
-    %erlang:display(InvalidIds).
-
 get_seq_from_range(Range) ->
     % Range Str is always of the form "X-Y" where X and Y are integers
     [LowStr, HighStr] = string:tokens(Range, "-"),
@@ -42,7 +39,6 @@ is_invalid_p1(Num, Acc) ->
     NumStr = integer_to_list(Num),
     StrLen = string:len(NumStr),
     Res = invalid_checker(Num, StrLen, Acc),
-    %io:format("Result of is is_invalid_id(Num = ~p, Acc = ~p): ~p~n", [Num, Acc, Res]),
     Res.
 
 % Prepends num to acc if second argument (string length modulus) is 0 and 
@@ -55,7 +51,6 @@ invalid_checker(Num, StrLen, Acc) when StrLen rem 2 == 0 ->
         true -> Ret = [Num|Acc];
         false -> Ret = Acc
     end,
-    %io:format("Num: ~p, FirstHalf: ~p, SecondHalf: ~p, Ret: ~p~n", [Num, FirstHalf, SecondHalf, Ret]),
     Ret;
 invalid_checker(_, StrLen, Acc) when StrLen rem 2 == 1-> Acc.
 
@@ -82,19 +77,12 @@ get_invalid_p2(Range, Acc) ->
         Seq
     ),
     
-    NewAcc = [ResultFromSeq|Acc],
-
-    %io:format("Invalid Ids in get_invalid_p2 fn~n"),
-    %io:format("~w~n", [ResultFromSeq]),
-
-    NewAcc.
+    [ResultFromSeq|Acc].
 
 is_invalid_p2(Num, Acc) ->
     NumStr = integer_to_list(Num),
     Patterns = build_patterns(NumStr),
     IsRepeating = check_patterns(NumStr, Patterns),
-
-    %io:format("IsRepeating(~p)? ~p~n", [Num, IsRepeating]),
 
     case IsRepeating of
         true -> [Num|Acc];
@@ -106,7 +94,6 @@ is_invalid_p2(Num, Acc) ->
 % 121 should have the patterns list ["1"]
 build_patterns(NumStr) -> bp_helper(NumStr, 1, []).
 
-% TODO: Revisit the pattern builder
 bp_helper(NumStr, _, _) when length(NumStr) == 1 -> [false];
 bp_helper(NumStr, Idx, Acc) when Idx == length(NumStr) div 2 -> [string:slice(NumStr, 0, Idx)|Acc];
 bp_helper(NumStr, Idx, Acc) when Idx < length(NumStr) div 2 ->
