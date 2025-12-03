@@ -124,5 +124,3 @@ split_helper(String, N, Acc) when N =< length(String) ->
     NewAcc = [string:slice(String, 0, N) | Acc],
     NewStr = string:slice(String, N),
     split_helper(NewStr, N, NewAcc).
-
-

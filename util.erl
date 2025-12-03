@@ -1,7 +1,8 @@
 -module(util).
 -export([
     mod/2,
-    read_file/1
+    read_file/1,
+    find_index/2
 ]).
 
 % rem in Erlang != modulo for negative numbers
@@ -18,3 +19,17 @@ read_file(FileName) ->
     {ok, Binary} = file:read_file(FileName),
     BinaryList = binary:split(Binary, ~"\n", [trim, global]),
     [binary_to_list(BinLine) || BinLine <- BinaryList].
+
+-doc "
+Finds the 0-based index of the first occurrence of Elem in List.
+Returns a -1 if the item is not found.
+".
+find_index(Elem, List) ->
+    FindIndex = fun 
+                    FindIndex(E, [E | _T], Index) -> Index;
+                    FindIndex(E, [_Head | Tail], Index) -> FindIndex(E, Tail, Index + 1);
+                    FindIndex(_Elem, [], _Index) -> -1
+                end,
+    
+    FindIndex(Elem, List, 0).
+                    
