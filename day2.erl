@@ -19,10 +19,7 @@ get_ranges() ->
     string:tokens(FileOutput, ",").
 
 get_invalid_p1(Range, Acc) ->
-    % Range Str is always of the form "X-Y" where X and Y are integers
-    [LowStr, HighStr] = string:tokens(Range, "-"),
-    [Low, High] = [list_to_integer(X) || X <:- [LowStr, HighStr]],
-    Seq = lists:seq(Low, High),
+    Seq = get_seq_from_range(Range),
 
     IsInvalidFn = fun is_invalid_p1/2,
     ResultFromSeq = lists:foldl(
@@ -34,6 +31,12 @@ get_invalid_p1(Range, Acc) ->
 
     %io:format("Invalid Ids in get_invalid_ids fn~n"),
     %erlang:display(InvalidIds).
+
+get_seq_from_range(Range) ->
+    % Range Str is always of the form "X-Y" where X and Y are integers
+    [LowStr, HighStr] = string:tokens(Range, "-"),
+    [Low, High] = [list_to_integer(X) || X <:- [LowStr, HighStr]],
+    lists:seq(Low, High).
 
 is_invalid_p1(Num, Acc) ->
     NumStr = integer_to_list(Num),
@@ -66,14 +69,11 @@ p2() ->
         Ranges
     )),
 
-    Sum = lists:foldl(fun(X, Sum) -> X + Sum end, 0, InvalidIds),
+    Sum = sets:fold(fun(X, Sum) -> X + Sum end, 0, sets:from_list(InvalidIds, [{'version', 2}])),
     erlang:display(Sum).
  
 get_invalid_p2(Range, Acc) ->
-    % Range Str is always of the form "X-Y" where X and Y are integers
-    [LowStr, HighStr] = string:tokens(Range, "-"),
-    [Low, High] = [list_to_integer(X) || X <:- [LowStr, HighStr]],
-    Seq = lists:seq(Low, High),
+    Seq = get_seq_from_range(Range),
 
     IsInvalidFn = fun is_invalid_p2/2,
     ResultFromSeq = lists:foldl(
@@ -101,7 +101,6 @@ is_invalid_p2(Num, Acc) ->
         false -> Acc
     end.
 
-
 % Build patterns
 % 824824824 should have the patterns list ["8", "82", "824", "8248"]
 % 121 should have the patterns list ["1"]
@@ -119,14 +118,12 @@ check_patterns(NumStr, Patterns) ->
     lists:any(fun(Res) -> Res == true end, PatternCheckResults).
 
 % Pattern must be a valid prefix of the string.
-% TODO: Revisit the pattern checking
 is_repeating_from_pattern(NumStr, Pattern) ->
     PatternLen = length(Pattern),
     Suffix = string:slice(NumStr, PatternLen),
 
     SubstringsOfPatternLength = split_by_n(Suffix, PatternLen),
-    AllMatch = lists:all(fun(S) -> S == Pattern end, SubstringsOfPatternLength),
-    AllMatch andalso length(SubstringsOfPatternLength) >= 2.
+    lists:all(fun(S) -> S == Pattern end, SubstringsOfPatternLength).
     
 split_by_n(String, N) -> split_helper(String, N, []).
 
